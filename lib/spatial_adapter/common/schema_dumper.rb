@@ -76,8 +76,12 @@ ActiveRecord::SchemaDumper.class_eval do
       stream.print tbl.read
     rescue => e
       stream.puts "# Could not dump table #{table.inspect} because of following #{e.class}"
-      stream.puts "#   #{e.message}"
+      stream.puts "#   #{e.message} #{e.backtrace.join("\n")}"
       stream.puts
+      puts "# Could not dump table #{table.inspect} because of following #{e.class}"
+      puts "#   #{e.message} #{e.backtrace.join("\n")}"
+      puts
+      raise e
     end
     
     stream
@@ -116,7 +120,7 @@ ActiveRecord::SchemaDumper.class_eval do
                        else
                          column.type.to_s
                        end
-    spec[:limit]     = column.limit.inspect if column.limit != @types[column.type][:limit] && spec[:type] != 'decimal'
+    spec[:limit]     = column.limit.inspect if column.limit && column.limit != @types[column.type][:limit] && spec[:type] != 'decimal'
     spec[:precision] = column.precision.inspect if !column.precision.nil?
     spec[:scale]     = column.scale.inspect if !column.scale.nil?
     spec[:null]      = 'false' if !column.null
@@ -126,7 +130,11 @@ ActiveRecord::SchemaDumper.class_eval do
     if column.is_a?(SpatialColumn)
       # Override with specific geometry type
       spec[:type]    = column.geometry_type.to_s
-      spec[:srid]    = column.srid.inspect if column.srid != -1
+      if column.srid == @connection.default_srid
+        spec[:srid]    = ":default_srid"
+      elsif column.srid != -1
+        spec[:srid]    = column.srid.inspect
+      end
       spec[:with_z]  = 'true' if column.with_z
       spec[:with_m]  = 'true' if column.with_m
       spec[:geographic] = 'true' if column.geographic?

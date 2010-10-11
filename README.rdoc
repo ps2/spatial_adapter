@@ -5,6 +5,7 @@ handle spatial datatypes in the following databases:
 
 - PostgreSQL (using PostGIS)
 - MySQL (using Spatial Extensions)
+- Oracle (using Locator or Oracle Spatial)
 
 == Dependencies
 
@@ -55,6 +56,7 @@ where [database] should be replaced with one of the following:
 
 - postgresql
 - mysql
+- oracle_enhanced
   
 For example to use the PostgreSQL spatial adapter:
 
@@ -103,6 +105,8 @@ Here is a related statement valid for MySql version <= 5.0.16:
   "ENGINE=MyISAM"</tt> to the create_table statement, since only MyISAM tables
   can have spatial columns.  In addition, only MyISAM tables may have spatial
   indexes.
+
+- On Oracle, :with_m is not supported.
 
 === Models
 

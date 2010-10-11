@@ -4,7 +4,7 @@ module SpatialAdapter
       adapter = ActiveRecord::Base.configurations[Rails.env]['adapter']
       begin
         require "spatial_adapter/#{adapter}"
-      rescue LoadError
+      rescue LoadError => e
         raise SpatialAdapter::NotCompatibleError.new("spatial_adapter does not currently support the #{adapter} database.")
       end
     end

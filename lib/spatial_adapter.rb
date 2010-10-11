@@ -38,4 +38,5 @@ require 'spatial_adapter/common/spatial_column'
 require 'spatial_adapter/common/schema_definitions'
 require 'spatial_adapter/common/schema_dumper'
 require 'spatial_adapter/common/table_definition'
+require 'spatial_adapter/common/active_record_base'
 require 'spatial_adapter/railtie' if defined?(Rails::Railtie)

@@ -8,6 +8,7 @@ describe "Spatially-enabled Models" do
   before :each do
     postgis_connection
     @connection = ActiveRecord::Base.connection
+    GeometryFactory.default_srid = @connection.default_srid
   end
   
   describe "inserting records" do

@@ -30,6 +30,10 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     postgis_major_version > 1 || (postgis_major_version == 1 && postgis_minor_version >= 5)
   end
   
+  def default_srid
+    4326
+  end
+  
   alias :original_native_database_types :native_database_types
   def native_database_types
     original_native_database_types.merge!(geometry_data_types)
@@ -239,6 +243,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
     raw_geom_infos
 
   end
+  
 end
 
 module ActiveRecord
@@ -252,7 +257,9 @@ module ActiveRecord
 
           column = self[name] || PostgreSQLColumnDefinition.new(@base, name, type)
           column.null = options[:null]
-          column.srid = options[:srid] || -1
+          srid = options[:srid] || -1
+          srid = @base.default_srid if srid == :default_srid
+          column.srid = srid
           column.with_z = options[:with_z] || false 
           column.with_m = options[:with_m] || false
           column.geographic = options[:geographic] || false

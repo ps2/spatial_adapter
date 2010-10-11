@@ -8,6 +8,10 @@ ActiveRecord::ConnectionAdapters::MysqlAdapter.class_eval do
     false
   end
   
+  def default_srid
+    4326
+  end
+  
   alias :original_native_database_types :native_database_types
   def native_database_types
     original_native_database_types.merge!(geometry_data_types)
