@@ -99,7 +99,7 @@ ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.class_eval do
 
   alias :original_remove_column :remove_column
   def remove_column(table_name, *column_names)
-    column_names = column_names.flatten
+    column_names = column_names.flatten.map {|c| c.to_sym}
     columns(table_name).each do |col|
       if column_names.include?(col.name.to_sym)
         # Geometry columns have to be removed using DropGeometryColumn
